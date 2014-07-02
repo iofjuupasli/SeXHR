@@ -1,7 +1,7 @@
 WebService.js
 =============
 
-This is a fork of [Francois Laubscher's](http://djfranzwa.co.za/) [Webservice.js](https://github.com/djfranzwa/Webservice.js), a simple XMLHttpRequest wrapper that eases interactions with all kinds of HTTP services.
+This is a fork of [Francois Laubscher's](http://djfranzwa.co.za/) nifty [Webservice.js](https://github.com/djfranzwa/Webservice.js), a simple XMLHttpRequest wrapper that eases interactions with all kinds of HTTP services.
 
 Example usage:
 
