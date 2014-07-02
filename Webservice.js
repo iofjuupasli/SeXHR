@@ -5,7 +5,7 @@
 // =============================================
 
 (function(win) {
-    function WebService() {
+    function SeXHR() {
 
         var self = this;
 
@@ -34,7 +34,7 @@
                     self.xhr.addEventListener(
                         "abort",
                         function(e) {
-                            console.log("[WebService.js]: Request aborted");
+                            console.log("[SeXHR]: Request aborted");
                             args.success({
                                 aborted: true
                             });
@@ -45,7 +45,7 @@
                     self.xhr.addEventListener(
                         "error",
                         function(e) {
-                            console.error("[WebService.js]: Request error");
+                            console.error("[SeXHR]: Request error");
                             args.error({
                                 error: true
                             });
@@ -65,7 +65,7 @@
                                 response.json = JSON.parse(self.xhr.responseText);
                             }
 
-                            console.log("[WebService.js]: Request loaded");
+                            console.log("[SeXHR]: Request loaded");
 
                             if (response.status > 100 && response.status < 400) {
                                 args.success(response);
@@ -79,7 +79,7 @@
                     self.xhr.addEventListener(
                         "loadstart",
                         function(e) {
-                            console.log("[WebService.js]: Request initiated");
+                            console.log("[SeXHR]: Request initiated");
                         },
                         false
                     );
@@ -90,7 +90,7 @@
                             var percentage;
                             if (e.lengthComputable) {
                                 percentage = (e.loaded / e.total) * 100;
-                                console.log("[WebService.js]: Request progress " + percentage + "% (" + e.loaded + " bytes / " + e.total + " bytes)");
+                                console.log("[SeXHR]: Request progress " + percentage + "% (" + e.loaded + " bytes / " + e.total + " bytes)");
                             }
                         },
                         false
@@ -99,7 +99,7 @@
                     self.xhr.addEventListener(
                         "timeout",
                         function(e) {
-                            console.log("[WebService.js]: Request timed out");
+                            console.log("[SeXHR]: Request timed out");
                             args.error({
                                 timeout: true
                             });
@@ -110,7 +110,7 @@
                     self.xhr.addEventListener(
                         "loadend",
                         function(e) {
-                            console.log("[WebService.js]: Request complete");
+                            console.log("[SeXHR]: Request complete");
                         },
                         false
                     );
@@ -137,13 +137,13 @@
 
                         self.xhr.send(args.body);
                     } else {
-                        console.error("[WebService.js]: No request URL given");
+                        console.error("[SeXHR]: No request URL given");
                     }
                 } else {
-                    console.error("[WebService.js]: No request `error` handler given");
+                    console.error("[SeXHR]: No request `error` handler given");
                 }
             } else {
-                console.error("[WebService.js]: No request `success` handler given");
+                console.error("[SeXHR]: No request `success` handler given");
             }
         };
 
@@ -156,13 +156,14 @@
         };
     }
 
-    WebService.prototype.request = function request(options) {
+    SeXHR.prototype.request = function request(options) {
         this.request(options);
     };
 
-    WebService.prototype.cancel = function cancel() {
+    SeXHR.prototype.cancel = function cancel() {
         this.abort(arguments);
     };
 
-    win.WebService = WebService;
+    win.SeXHR = SeXHR;
+    win.sexhr = SeXHR;
 })(window);

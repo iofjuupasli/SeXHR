@@ -1,16 +1,21 @@
-WebService.js
-=============
+SeXHR
+=====
+
+Ajax is way sexy, mang.
 
 This is a fork of [Francois Laubscher's](http://djfranzwa.co.za/) nifty [Webservice.js](https://github.com/djfranzwa/Webservice.js), a simple XMLHttpRequest wrapper that eases interactions with all kinds of HTTP services.
+
+SeXHR was optimised with the [Closure Compiler](https://developers.google.com/closure/compiler/) is 816 bytes gzipped or 2.15KB uncompressed.
 
 Example usage:
 
 ```html
-<script src="WebService.js"></script>
+<script src="SeXHR.min.js"></script>
 <script>
-    var ws = new WebService();
+    var xhr = new SeXHR();
+    //Or `new sexhr();`
 
-    ws.request({
+    xhr.request({
         url: "http://www.example.com/",
         success: function(res) {
             console.log(res)
@@ -20,7 +25,7 @@ Example usage:
         }
     });
 
-    ws.request({
+    xhr.request({
         url: "http://www.example.com/",
         method: "post",
         json: true,
