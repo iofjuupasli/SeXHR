@@ -1,53 +1,168 @@
 // =============================================
-// Author: Francois Laubscher
-// Date: 2014-07-01
-// Description: Webservice helper class
+// Author: Ant Cosentino
+// Date: 2014-07-02
+// Description: XMLHttpRequest wrapper utility
 // =============================================
 
-function WebService(url) {
-    this.serviceUrl = url;
-    this.CallService = function (method, msgBody, onSuccess, onFail) {
+(function(win) {
+    function WebService() {
 
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open(method, this.serviceUrl, true);
-        // fire this event whenever the service state changes
-        xmlHttp.onreadystatechange = function () {
-            switch (xmlHttp.readyState) {
-                case 0:
-                    // request not initialized
-                    // onFail
-                    onFail("request not initialized.");
-                    break;
-                case 4:
-                    // request finished and response is ready
-                    if (xmlHttp.status == 200) {
-                        // response from server is ok
-                        onSuccess(xmlHttp.responseText);
+        var self = this;
 
+        self.xhr = new XMLHttpRequest();
+
+        self.request = function request(options) {
+
+            var args = {
+                url: (options.hasOwnProperty("url")) ? options.url : "",
+                method: (options.hasOwnProperty("method")) ? options.method : "get",
+                json: (options.hasOwnProperty("json")) ? options.json : false,
+                body: (options.hasOwnProperty("body")) ? options.body : null,
+                timeout: (options.hasOwnProperty("timeout")) ? options.timeout : 0,
+                headers: (options.hasOwnProperty("headers")) ? options.headers : undefined,
+                username: (options.hasOwnProperty("username")) ? options.username : "",
+                password: (options.hasOwnProperty("password")) ? options.password : "",
+                async: (!options.hasOwnProperty("async")) ? true : options.async,
+                success: (options.hasOwnProperty("success")) ? options.success : undefined,
+                error: (options.hasOwnProperty("error")) ? options.error : undefined
+            };
+
+            if (typeof args.success === "function") {
+
+                if (typeof args.error === "function") {
+
+                    self.xhr.addEventListener(
+                        "abort",
+                        function(e) {
+                            console.log("[WebService.js]: Request aborted");
+                            args.success({
+                                aborted: true
+                            });
+                        },
+                        false
+                    );
+
+                    self.xhr.addEventListener(
+                        "error",
+                        function(e) {
+                            console.error("[WebService.js]: Request error");
+                            args.error({
+                                error: true
+                            });
+                        },
+                        false
+                    );
+
+                    self.xhr.addEventListener(
+                        "load",
+                        function(e) {
+                            var response = {
+                                text: self.xhr.responseText,
+                                status: self.xhr.status
+                            };
+
+                            if (args.json) {
+                                response.json = JSON.parse(self.xhr.responseText);
+                            }
+
+                            console.log("[WebService.js]: Request loaded");
+
+                            if (response.status > 100 && response.status < 400) {
+                                args.success(response);
+                            } else {
+                                args.error(response);
+                            }
+                        },
+                        false
+                    );
+
+                    self.xhr.addEventListener(
+                        "loadstart",
+                        function(e) {
+                            console.log("[WebService.js]: Request initiated");
+                        },
+                        false
+                    );
+
+                    self.xhr.addEventListener(
+                        "progress",
+                        function(e) {
+                            var percentage;
+                            if (e.lengthComputable) {
+                                percentage = (e.loaded / e.total) * 100;
+                                console.log("[WebService.js]: Request progress " + percentage + "% (" + e.loaded + " bytes / " + e.total + " bytes)");
+                            }
+                        },
+                        false
+                    );
+
+                    self.xhr.addEventListener(
+                        "timeout",
+                        function(e) {
+                            console.log("[WebService.js]: Request timed out");
+                            args.error({
+                                timeout: true
+                            });
+                        },
+                        false
+                    );
+
+                    self.xhr.addEventListener(
+                        "loadend",
+                        function(e) {
+                            console.log("[WebService.js]: Request complete");
+                        },
+                        false
+                    );
+
+                    if (args.url !== "") {
+
+                        if (args.username && args.password) {
+                            self.xhr.open(args.method, args.url, args.async, args.username, args.password);
+                        } else {
+                            self.xhr.open(args.method, args.url, args.async);
+                        }
+
+                        if (args.headers) {
+                            var headers = Object.keys(args.headers);
+
+                            for (var header in headers) {
+                                self.xhr.setRequestHeader(headers[header], args.headers[headers[header]]);
+                            }
+                        }
+
+                        if (args.timeout > 0 && args.async === true) {
+                            self.xhr.timeout = args.timeout;
+                        }
+
+                        self.xhr.send(args.body);
                     } else {
-                        // anything else failed
-                        onFail("Error calling service. Status code: " + xmlHttp.status);
+                        console.error("[WebService.js]: No request URL given");
                     }
-                    break;
+                } else {
+                    console.error("[WebService.js]: No request `error` handler given");
+                }
+            } else {
+                console.error("[WebService.js]: No request `success` handler given");
             }
-        }
+        };
 
-        // finally send the request
-        xmlHttp.send(msgBody);
+        self.abort = function abort(args) {
+            if (args.length === 1 && typeof args[0] === "number") {
+                window.setTimeout(self.xhr.abort(), args[0]);
+            } else {
+                self.xhr.abort();
+            }
+        };
     }
-}
 
-// This function calls the web service by using HTTP GET
-// onSuccess: on success callback function
-// onFail: on fail callback function
-WebService.prototype.httpGET = function (onSuccess, onFail) {
-    this.CallService("GET", null, onSuccess, onFail);
-}
+    WebService.prototype.request = function request(options) {
+        this.request(options);
+    };
 
-// This function sends a message to the web service by using HTTP POST
-// message: message to send
-// onSuccess: on success callback function
-// onFail: on fail callback function
-WebService.prototype.httpPOST = function (message, onSuccess, onFail) {
-    this.CallService("POST", message, onSuccess, onFail);
-}
+    WebService.prototype.cancel = function cancel() {
+        this.abort(arguments);
+    };
+
+    win.WebService = WebService;
+})(window);

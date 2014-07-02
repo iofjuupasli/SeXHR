@@ -1,32 +1,38 @@
-Webservice.js
+WebService.js
 =============
 
-A simple Web service wrapper library.
+This is a fork of [Francois Laubscher's](http://djfranzwa.co.za/) [Webservice.js](https://github.com/djfranzwa/Webservice.js), a simple XMLHttpRequest wrapper that eases interactions with all kinds of HTTP services.
 
-I got kind of tired using JQuery to make all my HTTP requests in JavaScript. 
-I decided to build this tiny, simple JavaScript library which can be used to call Web services using HTTP GET or HTTP POST.
+Example usage:
 
-It probably sucks, but it works for me :D
+```html
+<script src="WebService.js"></script>
+<script>
+    var ws = new WebService();
 
-Want to know how to use it? Pretty simple, check.
+    ws.request({
+        url: "http://www.example.com/",
+        success: function(res) {
+            console.log(res)
+        },
+        error: function(err) {
+            console.error(err)
+        }
+    });
 
-	function Test_GET(){
-		var webService = new WebService("<url_goes_here>");
-
-		webService.httpGET(function (result) {
-			alert(result);
-		}, function (error){
-			alert(error);
-		});
-	}
-	
-	function Test_POST(){
-		var webService = new WebService("<url_goes_here>");
-		var object = { FirstName: 'Foo', LastName: 'Bar' };
-
-		webService.httpPOST(JSON.stringify(object), function (result) {
-			alert(result);
-		}, function (error){
-			alert(error);
-		});
-	}
+    ws.request({
+        url: "http://www.example.com/",
+        method: "post",
+        json: true,
+        headers: { 'Accept': 'application/json' },
+        timeout: 5000,
+        body: new FormData(document.getElementById("create-form")),
+        success: function(res) {
+        	console.log("parsed response", res.json)
+        },
+        error: function(err) {
+            console.log(err)
+        }
+    });
+</script>
+```
