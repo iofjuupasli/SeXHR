@@ -163,7 +163,6 @@
     SeXHR.prototype.cancel = function cancel() {
         this.abort(arguments);
     };
-
     win.SeXHR = SeXHR;
     win.sexhr = SeXHR;
 })(window);
