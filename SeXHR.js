@@ -11,7 +11,7 @@
 
         self.xhr = new XMLHttpRequest();
 
-        self.request = function request(options) {
+        self.req = function req(options) {
 
             var args = {
                 url: (options.hasOwnProperty("url")) ? options.url : "",
@@ -157,7 +157,7 @@
     }
 
     SeXHR.prototype.request = function request(options) {
-        this.request(options);
+        this.req(options);
     };
 
     SeXHR.prototype.cancel = function cancel() {

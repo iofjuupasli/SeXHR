@@ -5,7 +5,7 @@ Ajax is way sexy, mang.
 
 This is a fork of [Francois Laubscher's](http://djfranzwa.co.za/) nifty [Webservice.js](https://github.com/djfranzwa/Webservice.js), a simple XMLHttpRequest wrapper that eases interactions with all kinds of HTTP services.
 
-SeXHR was optimised with the [Closure Compiler](https://developers.google.com/closure/compiler/) and is 855 bytes gzipped or 2.29KB uncompressed.
+SeXHR was optimised with the [Closure Compiler](https://developers.google.com/closure/compiler/) and is 855 bytes gzipped or 2.28KB uncompressed.
 
 Example usage:
 
