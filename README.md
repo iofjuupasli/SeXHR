@@ -5,10 +5,10 @@ SeXHR
 
 This utility is a fork of [Francois Laubscher's](http://djfranzwa.co.za/) nifty [Webservice.js](https://github.com/djfranzwa/Webservice.js), a simple XMLHttpRequest wrapper that eases interactions with all kinds of HTTP services.
 
-SeXHR supports custom HTTP methods, custom HTTP headers, HTTP authentication, automatic JSON response parsing and a request timeout duration.
+SeXHR is a (ninety percent, according to Git) rewritten version of Webservice.js that supports custom HTTP methods, custom HTTP headers, HTTP authentication, automatic JSON response parsing and request timeout.
 It was optimised with the [Closure Compiler](https://developers.google.com/closure/compiler/) and is *855 bytes* gzipped or *2.28KB* uncompressed.
 
-Example usage:
+Usage example:
 
 ```html
 <script src="SeXHR.min.js"></script>
