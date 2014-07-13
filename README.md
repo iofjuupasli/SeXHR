@@ -5,8 +5,12 @@ SeXHR
 
 This utility is a fork of [Francois Laubscher's](http://djfranzwa.co.za/) nifty [Webservice.js](https://github.com/djfranzwa/Webservice.js), a simple XMLHttpRequest wrapper that eases interactions with all kinds of HTTP services.
 
-SeXHR is a (ninety percent, according to Git) rewritten version of Webservice.js that supports custom HTTP methods, custom HTTP headers, HTTP authentication, automatic JSON response parsing and request timeout.
+SeXHR is a (ninety percent, according to Git) rewritten version of Webservice.js that supports custom HTTP methods and headers, HTTP authentication, automatic JSON response parsing and request timeout.
 It was optimised with the [Closure Compiler](https://developers.google.com/closure/compiler/) and is *855 bytes* gzipped or *2.28KB* uncompressed.
+
+#####Browser Support
+
+It should be noted that I haven't spent any time analysing which browsers this library supports. Lazy, I know, but I developed SeXHR with the future in mind. So, if your target browser doesn't support XMLHttpRequest's `addEventListener` interface, then it's likely this won't work.
 
 Usage example:
 
@@ -32,7 +36,7 @@ Usage example:
         json: true,
         headers: { "Accept": "application/json" },
         timeout: 5000,
-        body: new FormData(document.getElementById("create-form")),
+        body: new FormData(document.getElementById("some-form")),
         success: function(res) {
             console.log("parsed response", res.json)
         },
