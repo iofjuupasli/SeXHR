@@ -7,135 +7,127 @@
 (function(win) {
     function SeXHR() {
 
-        var self = this;
+        var self = this,
+            xhr = new XMLHttpRequest;
 
-        self.xhr = new XMLHttpRequest();
-
-        self.req = function req(options) {
-
-            var args = {
-                url: (options.hasOwnProperty("url")) ? options.url : "",
-                method: (options.hasOwnProperty("method")) ? options.method : "get",
-                json: (options.hasOwnProperty("json")) ? options.json : false,
-                body: (options.hasOwnProperty("body")) ? options.body : null,
-                timeout: (options.hasOwnProperty("timeout")) ? options.timeout : 0,
-                headers: (options.hasOwnProperty("headers")) ? options.headers : undefined,
-                username: (options.hasOwnProperty("username")) ? options.username : "",
-                password: (options.hasOwnProperty("password")) ? options.password : "",
-                async: (!options.hasOwnProperty("async")) ? true : options.async,
-                success: (options.hasOwnProperty("success")) ? options.success : undefined,
-                error: (options.hasOwnProperty("error")) ? options.error : undefined
+        self.req = function req(args) {
+            var opts = {
+                url: (args.hasOwnProperty("url")) ? args.url : "",
+                method: (args.hasOwnProperty("method")) ? args.method : "get",
+                json: (args.hasOwnProperty("json")) ? args.json : false,
+                body: (args.hasOwnProperty("body")) ? args.body : null,
+                mime: (args.hasOwnProperty("mime")) ? args.mime : "",
+                timeout: (args.hasOwnProperty("timeout")) ? args.timeout : 0,
+                headers: (args.hasOwnProperty("headers")) ? args.headers : undefined,
+                username: (args.hasOwnProperty("username")) ? args.username : "",
+                password: (args.hasOwnProperty("password")) ? args.password : "",
+                async: (!args.hasOwnProperty("async")) ? true : args.async,
+                success: (args.hasOwnProperty("success")) ? args.success : undefined,
+                error: (args.hasOwnProperty("error")) ? args.error : undefined
             };
 
-            if (typeof args.success === "function") {
+            if (typeof opts.success === "function") {
 
-                if (typeof args.error === "function") {
-
-                    self.xhr.addEventListener(
+                if (typeof opts.error === "function") {
+                    xhr.addEventListener(
                         "abort",
                         function(e) {
                             console.log("[SeXHR]: Request aborted");
-                            args.success({
-                                aborted: true
-                            });
+                            opts.success({ abort: true });
                         },
                         false
                     );
-
-                    self.xhr.addEventListener(
+                    xhr.addEventListener(
                         "error",
                         function(e) {
                             console.error("[SeXHR]: Request error");
-                            args.error({
-                                error: true
-                            });
+                            opts.error({ error: true });
                         },
                         false
                     );
-
-                    self.xhr.addEventListener(
+                    xhr.addEventListener(
                         "load",
                         function(e) {
+                            console.log("[SeXHR]: Request loaded");
                             var response = {
-                                text: self.xhr.responseText,
-                                status: self.xhr.status
+                                text: xhr.responseText,
+                                status: xhr.status,
+                                headers: xhr.getAllResponseHeaders().split("\n")
                             };
 
-                            if (args.json) {
-                                response.json = JSON.parse(self.xhr.responseText);
-                            }
-
-                            console.log("[SeXHR]: Request loaded");
-
                             if (response.status > 100 && response.status < 400) {
-                                args.success(response);
+
+                                if (opts.json) {
+                                    response.json = JSON.parse(response.text);
+                                }
+                                opts.success(response);
                             } else {
-                                args.error(response);
+                                opts.error(response);
                             }
                         },
                         false
                     );
-
-                    self.xhr.addEventListener(
+                    xhr.addEventListener(
                         "loadstart",
                         function(e) {
                             console.log("[SeXHR]: Request initiated");
                         },
                         false
                     );
-
-                    self.xhr.addEventListener(
+                    xhr.addEventListener(
                         "progress",
                         function(e) {
-                            var percentage;
                             if (e.lengthComputable) {
-                                percentage = (e.loaded / e.total) * 100;
-                                console.log("[SeXHR]: Request progress " + percentage + "% (" + e.loaded + " bytes / " + e.total + " bytes)");
+                                console.log("[SeXHR]: Request progress " + ((e.loaded / e.total) * 100) + "% (" + e.loaded + " bytes / " + e.total + " bytes)");
                             }
                         },
                         false
                     );
-
-                    self.xhr.addEventListener(
+                    xhr.addEventListener(
                         "timeout",
                         function(e) {
                             console.log("[SeXHR]: Request timed out");
-                            args.error({
-                                timeout: true
-                            });
+                            opts.error({ timeout: true });
                         },
                         false
                     );
-
-                    self.xhr.addEventListener(
+                    xhr.addEventListener(
                         "loadend",
                         function(e) {
-                            console.log("[SeXHR]: Request complete");
+                            console.log("[SeXHR]: Request completed");
                         },
                         false
                     );
 
-                    if (args.url !== "") {
+                    if (opts.url !== "") {
 
-                        if (args.username && args.password) {
-                            self.xhr.open(args.method, args.url, args.async, args.username, args.password);
+                        if (opts.username && opts.password) {
+                            xhr.open(opts.method, opts.url, opts.async, opts.username, opts.password);
                         } else {
-                            self.xhr.open(args.method, args.url, args.async);
+                            xhr.open(opts.method, opts.url, opts.async);
                         }
 
-                        if (args.headers) {
-                            var headers = Object.keys(args.headers);
+                        if (opts.headers) {
+                            var headers = Object.keys(opts.headers);
 
                             for (var header in headers) {
-                                self.xhr.setRequestHeader(headers[header], args.headers[headers[header]]);
+                                xhr.setRequestHeader(headers[header], opts.headers[headers[header]]);
                             }
                         }
 
-                        if (args.timeout > 0 && args.async === true) {
-                            self.xhr.timeout = args.timeout;
+                        if (opts.mime !== "") {
+                            xhr.overrideMimeType(opts.mime);
                         }
 
-                        self.xhr.send(args.body);
+                        if (opts.timeout > 0) {
+
+                            if (opts.async === true) {
+                                xhr.timeout = opts.timeout;
+                            } else {
+                                console.error("[SeXHR]: In accordance with the XMLHttpRequest specification, a timeout duration can only be specified for asynchronous requests.");
+                            }
+                        }
+                        xhr.send(opts.body);
                     } else {
                         console.error("[SeXHR]: No request URL given");
                     }
@@ -145,24 +137,14 @@
             } else {
                 console.error("[SeXHR]: No request `success` handler given");
             }
-        };
+        },
+        self.kill = function kill() {
 
-        self.abort = function abort(args) {
-            if (args.length === 1 && typeof args[0] === "number") {
-                window.setTimeout(self.xhr.abort(), args[0]);
-            } else {
-                self.xhr.abort();
-            }
-        };
+            xhr.abort();
+        },
+        self.request = self.req,
+        self.cancel = self.kill;
     }
-
-    SeXHR.prototype.request = function request(options) {
-        this.req(options);
-    };
-
-    SeXHR.prototype.cancel = function cancel() {
-        this.abort(arguments);
-    };
     win.SeXHR = SeXHR;
     win.sexhr = SeXHR;
 })(window);

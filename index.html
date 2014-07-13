@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="SeXHR.min.js"></script>
+        <title>SeXHR example</title>
+    </head>
+    <body>
+        <h3>Example using `antino.co.za/tfstats/v1/log/:id`</h3>
+        <input id="log">
+        <p id="headers"></p>
+        <pre id="response"></pre>
+        <script>
+            var xhr = new sexhr(),
+                log = document.getElementById("log"),
+                headers = document.getElementById("headers"),
+                pre = document.getElementById("response");
+
+            log.onchange = function(e) {
+                xhr.req({
+                    url: "http://antino.co.za/tfstats/v1/log/" + e.target.value,
+                    timeout: 5000,
+                    success: function(res) {
+                        if (res.abort) {
+                            pre.textContent = "Request aborted"
+                        } else {
+                            pre.textContent = res.text
+                            headers.textContent = res.headers
+                        }
+                    },
+                    error: function(err) {
+                        if (err.error) {
+                            pre.textContent = "Request error"
+                        } else if (err.timeout) {
+                            pre.textContent = "Request timeout"
+                        } else {
+                            pre.textContent = err.text
+                            headers.textContent = err.headers
+                        }
+                    }
+                });
+            };
+        </script>
+    </body>
+</html>

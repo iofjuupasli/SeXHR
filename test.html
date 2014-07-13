@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" href="node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
+        <script src="node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
+        <script src="node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
+        <script src="node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>
+        <script src="node_modules/should/should.js"></script>
+        <script src="SeXHR.js"></script>
+    </head>
+    <body>
+        <script>
+            describe("sexhr", function() {
+                beforeEach(function() {
+                    console.log("[Jasmine]: Setting up...");
+                    this.sexhr = new sexhr;
+                });
+
+                afterEach(function() {
+                    console.log("[Jasmine]: Tearing down...");
+                    delete this.sexhr;
+                });
+
+                describe("request timeout", function() {
+                    it("should create err.timeout and set it to true if the request times out", function() {
+                        this.sexhr.req({
+                            url: "http://antino.co.za/tfstats/v1/player/8",
+                            timeout: 1,
+                            success: function(res) {},
+                            error: function(err) {
+                                err.should.have.property('timeout');
+                                (err.timeout).should.be.true;
+                            }
+                        });
+                    });
+                });
+
+                describe("request error", function() {
+                    it("should create err.error and set it to true if the request fails outright", function() {
+                        this.sexhr.req({
+                            url: "http://asdfasdfak",
+                            success: function(res) {},
+                            error: function(err) {
+                                err.should.have.property('error');
+                                (err.error).should.be.true;
+                            }
+                        });
+                    });
+                });
+
+                describe("request abortion", function() {
+                    it("should create res.abort and set it to true if the request is aborted", function() {
+                        this.sexhr.req({
+                            url: "http://antino.co.za/tfstats/v1/player/8",
+                            success: function(res) {
+                                res.should.have.property('abort');
+                                (res.abort).should.be.true;
+                            },
+                            error: function(err) {}
+                        });
+                        this.sexhr.kill();
+                    });
+                });
+
+                describe("request load", function() {
+                    it("should return a response object with correctly typed `text`, `status` and `header` properties", function() {
+                        this.sexhr.req({
+                            url: "http://antino.co.za/tfstats/v1/player/8",
+                            success: function(res) {
+                                res.should.have.property('text');
+                                (res.text).should.be.a.String;
+                                res.should.have.property('status');
+                                (res.status).should.be.a.Number;
+                                res.should.have.property('headers');
+                                (res.headers).should.be.an.Array;
+                            },
+                            error: function(err) {}
+                        });
+                    });
+
+                    describe("status code is less than 400", function() {
+                        it("should return a response object with a `json` property for json requests", function() {
+                            this.sexhr.req({
+                                url: "http://antino.co.za/tfstats/v1/player/8",
+                                json: true,
+                                success: function(res) {
+                                    res.should.have.property('json');
+                                },
+                                error: function(err) {}
+                            });
+                        });
+                        it("should parse the text response into a object for json requests", function() {
+                            this.sexhr.req({
+                                url: "http://antino.co.za/tfstats/v1/player/8",
+                                json: true,
+                                success: function(res) {
+                                    (res.json).should.be.an.Object;
+                                },
+                                error: function(err) {}
+                            });
+                        });
+                    });
+
+                    describe("status code is greater than 399", function() {
+                        it("should not return a parsed json response object", function() {
+                            this.sexhr.req({
+                                url: "http://antino.co.za/tfstats/v1/asdfasdfa",
+                                json: true,
+                                success: function(res) {},
+                                error: function(err) {
+                                    err.should.not.have.property('json');
+                                }
+                            });
+                        });
+                    });
+                });
+            });
+
+        </script>
+    </body>
+</html>

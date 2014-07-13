@@ -20,7 +20,7 @@ Usage example:
     var xhr = new SeXHR();
     //Or `new sexhr();`
 
-    xhr.request({
+    xhr.req({
         url: "http://www.example.com/",
         success: function(res) {
             console.log(res)
@@ -30,7 +30,7 @@ Usage example:
         }
     });
 
-    xhr.request({
+    xhr.req({
         url: "http://www.example.com/",
         method: "post",
         json: true,
