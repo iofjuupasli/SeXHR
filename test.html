@@ -77,40 +77,24 @@
                             error: function(err) {}
                         });
                     });
-
-                    describe("status code is less than 400", function() {
-                        it("should return a response object with a `json` property for json requests", function() {
-                            this.sexhr.req({
-                                url: "http://antino.co.za/tfstats/v1/player/8",
-                                json: true,
-                                success: function(res) {
-                                    res.should.have.property('json');
-                                },
-                                error: function(err) {}
-                            });
-                        });
-                        it("should parse the text response into a object for json requests", function() {
-                            this.sexhr.req({
-                                url: "http://antino.co.za/tfstats/v1/player/8",
-                                json: true,
-                                success: function(res) {
-                                    (res.json).should.be.an.Object;
-                                },
-                                error: function(err) {}
-                            });
+                    it("should return a response object with a `json` property for json requests", function() {
+                        this.sexhr.req({
+                            url: "http://antino.co.za/tfstats/v1/player/8",
+                            json: true,
+                            success: function(res) {
+                                res.should.have.property('json');
+                            },
+                            error: function(err) {}
                         });
                     });
-
-                    describe("status code is greater than 399", function() {
-                        it("should not return a parsed json response object", function() {
-                            this.sexhr.req({
-                                url: "http://antino.co.za/tfstats/v1/asdfasdfa",
-                                json: true,
-                                success: function(res) {},
-                                error: function(err) {
-                                    err.should.not.have.property('json');
-                                }
-                            });
+                    it("should parse the text response into a object for json requests", function() {
+                        this.sexhr.req({
+                            url: "http://antino.co.za/tfstats/v1/player/8",
+                            json: true,
+                            success: function(res) {
+                                (res.json).should.be.an.Object;
+                            },
+                            error: function(err) {}
                         });
                     });
                 });
