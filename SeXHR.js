@@ -40,13 +40,13 @@ Description: XMLHttpRequest wrapper utility
         if (typeof opts.error === "function") {
           this.xhr.addEventListener("abort", function(e) {
             console.log("[SeXHR] Request aborted.");
-            opts.success({
+            return opts.success({
               abort: true
             });
           }, false);
           this.xhr.addEventListener("error", function(e) {
             console.log("[SeXHR] Request error.");
-            opts.error({
+            return opts.error({
               error: true
             });
           }, false);
@@ -62,27 +62,27 @@ Description: XMLHttpRequest wrapper utility
               response.json = JSON.parse(response.text);
             }
             if (response.status > 99 && response.status < 400) {
-              opts.success(response);
+              return opts.success(response);
             } else {
-              opts.error(response);
+              return opts.error(response);
             }
           }, false);
           this.xhr.addEventListener("loadstart", function(e) {
-            console.log("[SeXHR] Request initiated.");
+            return console.log("[SeXHR] Request initiated.");
           }, false);
           this.xhr.addEventListener("progress", function(e) {
             if (e.lengthComputable) {
-              console.log("[SeXHR] Request progress: " + ((e.loaded / e.total) * 100) + "% (" + e.loaded + " bytes / " + e.total + " bytes)");
+              return console.log("[SeXHR] Request progress: " + ((e.loaded / e.total) * 100) + "% (" + e.loaded + " bytes / " + e.total + " bytes)");
             }
           }, false);
           this.xhr.addEventListener("timeout", function(e) {
             console.log("[SeXHR] Request timed out.");
-            opts.error({
+            return opts.error({
               timeout: true
             });
           }, false);
           this.xhr.addEventListener("loadend", function(e) {
-            console.log("[SeXHR] Request completed.");
+            return console.log("[SeXHR] Request completed.");
           }, false);
           if (opts.url) {
             if (opts.username && opts.password) {
@@ -105,20 +105,21 @@ Description: XMLHttpRequest wrapper utility
             if (opts.mime != null) {
               this.xhr.overrideMimeType(opts.mime);
             }
-            this.xhr.send(opts.body);
+            this.xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            return this.xhr.send(opts.body);
           } else {
-            console.error("[SeXHR] Request `url` is undefined.");
+            return console.error("[SeXHR] Request `url` is undefined.");
           }
         } else {
-          console.error("[SeXHR] Request `error` handler is undefined.");
+          return console.error("[SeXHR] Request `error` handler is undefined.");
         }
       } else {
-        console.error("[SeXHR] Request `success` handler is undefined.");
+        return console.error("[SeXHR] Request `success` handler is undefined.");
       }
     };
 
     SeXHR.prototype.kill = function() {
-      this.xhr.abort();
+      return this.xhr.abort();
     };
 
     return SeXHR;

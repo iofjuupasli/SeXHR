@@ -72,6 +72,7 @@ class SeXHR
 
                     @xhr.setRequestHeader key, val for key, val of opts.headers if opts.headers?
                     @xhr.overrideMimeType opts.mime if opts.mime?
+                    @xhr.setRequestHeader 'X-Requested-With', 'XMLHttpRequest'
                     @xhr.send opts.body
                 else
                     console.error "[SeXHR] Request `url` is undefined."
