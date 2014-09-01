@@ -10,7 +10,7 @@ It was optimised with the [Closure Compiler](https://developers.google.com/closu
 
 #####Browser Support
 
-It should be noted that I haven't spent any time analysing which browsers this library supports. Lazy, I know, but I developed SeXHR with the future in mind. So, if your target browser doesn't support XMLHttpRequest's `addEventListener` interface, then it's likely this won't work.
+It should be noted that I haven't spent any time analysing which browsers this library supports. Lazy, I know. Sue me :P. So, if your target browser doesn't support XMLHttpRequest's `addEventListener` interface, then it's likely this won't work.
 
 Usage example:
 
