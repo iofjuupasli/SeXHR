@@ -82,4 +82,4 @@ class SeXHR
             console.error "[SeXHR] Request `success` handler is undefined."
     kill: =>
         @xhr.abort()
-window.sexhr = SeXHR
+@sexhr = SeXHR
