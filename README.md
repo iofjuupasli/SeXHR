@@ -44,6 +44,6 @@ It should be noted that I haven't spent any time analysing which browsers this l
 ```
 
 #####Contributors
-[Ant Cosentino](http://antino.co.za/)
-[Francois Laubscher](http://djfranzwa.co.za/)
-[ushis](http://ushi.wurstcase.net/)
+- [Ant Cosentino](http://antino.co.za/)
+- [Francois Laubscher](http://djfranzwa.co.za/)
+- [ushis](http://ushi.wurstcase.net/)
