@@ -15,17 +15,13 @@ It should be noted that I haven't spent any time analysing which browsers this l
 <script src="sexhr.min.js"></script>
 <script>
     var xhr = new sexhr;
-
+    
     xhr.req({
         url: "http://www.example.com/",
-        success: function(res) {
-            console.log(res)
-        },
-        error: function(err) {
-            console.error(err)
-        }
+        success: function(res) { console.log(res) },
+        error: function(err) { console.error(err) }
     });
-
+    
     xhr.req({
         url: "http://www.example.com/",
         method: "post",
@@ -33,12 +29,18 @@ It should be noted that I haven't spent any time analysing which browsers this l
         headers: { "Accept": "application/json" },
         timeout: 5000,
         body: new FormData(document.getElementById("some-form")),
-        success: function(res) {
-            console.log("parsed response", res.json)
-        },
-        error: function(err) {
-            console.error(err)
-        }
+        success: function(res) { console.log("parsed response", res.json) },
+        error: function(err) { console.error(err) }
+    });
+    
+    xhr.req({
+        url: "http://www.example.com/",
+        mime: "image/jpeg",
+        async: false,
+        username: "beep",
+        password: "boop",
+        success: function(res) { console.log(res) },
+        error: function(err) { console.log(err) }
     });
 </script>
 ```
