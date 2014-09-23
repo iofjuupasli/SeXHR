@@ -3,7 +3,7 @@ SeXHR
 
 > "Ajax is way sexy, mang." said everyone, everywhere, always.
 
-SeXHR is a pretty-damn-small XMLHttpRequest wrapper that supports custom HTTP methods and headers, HTTP authentication, automatic JSON response parsing and request timeout.
+SeXHR is a pretty-damn-small `XMLHttpRequest` wrapper that supports custom HTTP methods and headers, HTTP authentication, automatic JSON response parsing, request timeout and use from within Web Workers. 
 
 #####Browser Support
 
