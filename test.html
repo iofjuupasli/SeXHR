@@ -23,12 +23,11 @@
 
                 describe("request timeout", function() {
                     it("should create err.timeout and set it to true if the request times out", function() {
-                        var self = this;
                         this.sexhr.req({
                             url: "http://antino.co.za/tfstats/v1/player/8",
                             timeout: 1,
                             done: function(err, res) {
-                                expect(err).toContain('timeout');
+                                expect('timeout' in err).toBe(true);
                                 expect(err.timeout).toBe(true);
                             }
                         });
@@ -37,11 +36,10 @@
 
                 describe("request error", function() {
                     it("should create err.error and set it to true if the request fails outright", function() {
-                        var self = this;
                         this.sexhr.req({
                             url: "http://asdfasdfak",
                             done: function(err, res) {
-                                expect(err).toContain('error');
+                                expect('error' in err).toBe(true);
                                 expect(err.error).toBe(true);
                             }
                         });
@@ -50,7 +48,6 @@
 
                 describe("request abortion", function() {
                     it("should create res.abort and set it to true if the request is aborted", function() {
-                        var self = this;
                         this.sexhr.req({
                             url: "http://antino.co.za/tfstats/v1/player/8",
                             done: function(err, res) {
@@ -64,7 +61,6 @@
 
                 describe("request load", function() {
                     it("should return a response object with correctly typed `text`, `status` and `header` properties", function() {
-                        var self = this;
                         this.sexhr.req({
                             url: "http://antino.co.za/tfstats/v1/player/8",
                             done: function(err, res) {
