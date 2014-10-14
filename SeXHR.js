@@ -16,9 +16,8 @@ Description: XMLHttpRequest wrapper utility
     function SeXHR() {
       this.kill = __bind(this.kill, this);
       this.req = __bind(this.req, this);
+      this.xhr = new XMLHttpRequest;
     }
-
-    SeXHR.prototype.xhr = new XMLHttpRequest;
 
     SeXHR.prototype.req = function(args) {
       var key, opts, val, _ref, _ref1, _ref10, _ref11, _ref12, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;

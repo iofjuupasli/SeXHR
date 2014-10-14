@@ -7,7 +7,8 @@ Description: XMLHttpRequest wrapper utility
 ###
 
 class SeXHR
-    xhr: new XMLHttpRequest
+    constructor: () ->
+        @xhr = new XMLHttpRequest
     req: (args) =>
         opts =
             url: args.url ? null
