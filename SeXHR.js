@@ -33,7 +33,7 @@ Description: XMLHttpRequest wrapper utility
         password: (_ref8 = args.password) != null ? _ref8 : null,
         async: (_ref9 = args.async) != null ? _ref9 : true,
         success: (_ref10 = args.success) != null ? _ref10 : null,
-        error: (_ref11 = args.success) != null ? _ref11 : null
+        error: (_ref11 = args.error) != null ? _ref11 : null
       };
       if (typeof opts.success === "function") {
         if (typeof opts.error === "function") {
@@ -54,7 +54,7 @@ Description: XMLHttpRequest wrapper utility
             console.log("[SeXHR] Request loaded.");
             response = {
               text: this.responseText,
-              status: this.statusCode,
+              status: this.status,
               headers: this.getAllResponseHeaders().split("\n")
             };
             if (opts.json) {
